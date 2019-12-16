@@ -16,9 +16,9 @@ def create_activ():
 
     """
     kwargs = {k: v for k, v in Config.activ.items() if k not in ['name']}
-    if Config.activ.name is ActivName.RELU:
+    if Config.activ['name'] is ActivName.RELU:
         from torch.nn import ReLU
         return ReLU()
-    elif Config.activ.name is ActivName.LEAKY_RELU:
+    elif Config.activ['name'] is ActivName.LEAKY_RELU:
         from torch.nn import LeakyReLU
         return LeakyReLU(**kwargs)

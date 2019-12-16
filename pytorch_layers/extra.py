@@ -2,7 +2,7 @@
 """Functions to create other layers.
 
 """
-from ..config import Config, Dim
+from .config import Config, Dim
 
 
 def create_dropout():

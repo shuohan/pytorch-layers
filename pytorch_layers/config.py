@@ -40,7 +40,7 @@ class Config(_Config):
     activ = {'name': ActivName.RELU}
     """Activation settings."""
 
-    norm = {'name': NormName.INSTANCE}
+    norm = {'name': NormName.INSTANCE, 'affine': True}
     """Normalization settings."""
 
     interp = {'mode': InterpMode.NEAREST}
@@ -48,6 +48,10 @@ class Config(_Config):
 
     dropout = 0.2
     """Dropout rate."""
+
+    avg_pool = {}
+    """Average pooling."""
+
 
 
     @classmethod
