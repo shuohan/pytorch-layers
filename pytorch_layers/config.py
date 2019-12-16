@@ -52,8 +52,6 @@ class Config(_Config):
     avg_pool = {}
     """Average pooling."""
 
-
-
     @classmethod
     def load_dict(cls, config):
         """Loads configurations from a :class:`dict`.
