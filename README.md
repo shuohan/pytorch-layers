@@ -1,3 +1,5 @@
 # PyTorch Layers
 
-Factory methods to create PyTorch layers. The operations are specified in Config class.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![coverage report](https://gitlab.com/shan-deep-networks/pytorch-layers/badges/master/coverage.svg)](https://gitlab.com/shan-deep-networks/pytorch-layers/commits/master)
+
+Factory methods to create PyTorch layers.

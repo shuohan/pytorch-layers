@@ -1,0 +1,16 @@
+image: pytorch
+
+stages:
+  - test
+
+before_script:
+  - pip install pytest coverage
+
+coverage:
+  stage: test
+  script:
+    - coverage run --source=config -m pytest tests/layers.py
+    - coverage report -m
+  coverage: '/^TOTAL.+?(\d+\%)$/'
+  only:
+  - master
