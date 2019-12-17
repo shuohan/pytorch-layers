@@ -34,7 +34,7 @@ class Config(_Config):
     """Global configurations for layer creation.
     
     """
-    dim = Dim.TWO
+    dim = Dim.THREE
     """Dimensionality of the operations."""
 
     activ = {'name': ActivName.RELU}
