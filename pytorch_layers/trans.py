@@ -45,9 +45,9 @@ def create_avg_pool(kernel_size, **kwargs):
         torch.nn.Module: The created average pooling layer.
 
     """
-    if Config.dim is Dim.TWO:
+    if Dim(Config.dim) is Dim.TWO:
         from torch.nn import AvgPool2d as AvgPool
-    elif Config.dim is Dim.THREE:
+    elif Dim(Config.dim) is Dim.THREE:
         from torch.nn import AvgPool3d as AvgPool
     return AvgPool(kernel_size, **Config.avg_pool, **kwargs)
 
@@ -67,9 +67,9 @@ def create_adaptive_avg_pool(output_size):
         torch.nn.Module: The created adaptive average pooling layer.
     
     """
-    if Config.dim is Dim.TWO:
+    if Dim(Config.dim) is Dim.TWO:
         from torch.nn import AdaptiveAvgPool2d as AdaptiveAvgPool
-    elif Config.dim is Dim.THREE:
+    elif Dim(Config.dim) is Dim.THREE:
         from torch.nn import AdaptiveAvgPool3d as AdaptiveAvgPool
     return AdaptiveAvgPool(output_size)
 
@@ -101,16 +101,16 @@ def create_interp(size=None, scale_factor=None):
         torch.nn.Module: The created interpolate layer.
 
     """
-    if Config.interp['mode'] is InterpMode.LINEAR:
-        if Config.dim is Dim.TWO:
+    if InterpMode(Config.interp_mode) is InterpMode.LINEAR:
+        if Dim(Config.dim) is Dim.TWO:
             mode = 'bilinear'
-        elif Config.dim is Dim.THREE:
+        elif Dim(Config.dim) is Dim.THREE:
             mode = 'trilinear'
-    elif Config.interp['mode'] is InterpMode.NEAREST:
+    elif InterpMode(Config.interp_mode) is InterpMode.NEAREST:
         mode = 'nearest'
-        Config.interp['align_corners'] = None
+        Config.interp_kwargs['align_corners'] = None
     return Interpolate(size=size, scale_factor=scale_factor, mode=mode,
-                       align_corners=Config.interp.get('align_corners'))
+                       align_corners=Config.interp_kwargs.get('align_corners'))
 
 
 def create_two_upsample():

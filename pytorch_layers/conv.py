@@ -2,6 +2,7 @@
 """Functions to create convolutional layers.
 
 """
+import torch
 from .config import Config, Dim
 
 
@@ -25,10 +26,10 @@ def create_conv(in_channels, out_channels, kernel_size, **kwargs):
         torch.nn.Module: The created convolutional layer.
 
     """
-    if Config.dim is Dim.TWO:
+    if Dim(Config.dim) is Dim.TWO:
         from torch.nn import Conv2d
         return Conv2d(in_channels, out_channels, kernel_size, **kwargs)
-    elif Config.dim == Dim.THREE:
+    elif Dim(Config.dim) is Dim.THREE:
         from torch.nn import Conv3d
         return Conv3d(in_channels, out_channels, kernel_size, **kwargs)
 

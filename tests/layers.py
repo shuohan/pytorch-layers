@@ -7,7 +7,7 @@ import torch
 import torch.nn.functional as F
 from copy import deepcopy
 
-from pytorch_layers import Config, Dim, ActivName, NormName, InterpMode
+from pytorch_layers import Config
 from pytorch_layers import create_conv, create_k1_conv, create_k3_conv
 from pytorch_layers import create_activ
 from pytorch_layers import create_dropout
@@ -110,10 +110,12 @@ def test_layers():
     str2 = re.sub('[ \t]+\(l6\).*\n', '', str2)
     assert str1 == str2
 
-    Config.dim = Dim.TWO
-    Config.activ = dict(name=ActivName.LEAKY_RELU, negative_slope=0.02)
-    Config.norm = dict(name=NormName.BATCH, track_running_stats=False)
-    Config.interp['mode'] = InterpMode.LINEAR
+    Config.dim = 2
+    Config.activ_mode = 'leaky_relu'
+    Config.activ_kwargs = dict(negative_slope=0.02)
+    Config.norm_mode = 'batch'
+    Config.norm_kwargs = dict(track_running_stats=False)
+    Config.interp_mode = 'linear'
     Config.dropout = 0.5
     Config.avg_pool = dict(stride=4)
 

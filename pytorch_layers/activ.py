@@ -2,7 +2,7 @@
 """Functions to create activation layers.
 
 """
-from .config import Config, ActivName 
+from .config import Config, ActivMode
 
 
 def create_activ():
@@ -15,10 +15,9 @@ def create_activ():
         torch.nn.Module: The created activation layer.
 
     """
-    kwargs = {k: v for k, v in Config.activ.items() if k not in ['name']}
-    if Config.activ['name'] is ActivName.RELU:
+    if ActivMode(Config.activ_mode) is ActivMode.RELU:
         from torch.nn import ReLU
         return ReLU()
-    elif Config.activ['name'] is ActivName.LEAKY_RELU:
+    elif ActivMode(Config.activ_mode) is ActivMode.LEAKY_RELU:
         from torch.nn import LeakyReLU
-        return LeakyReLU(**kwargs)
+        return LeakyReLU(**Config.activ_kwargs)
