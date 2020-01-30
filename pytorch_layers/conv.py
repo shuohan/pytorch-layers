@@ -3,7 +3,8 @@
 
 """
 import torch
-from .config import Config, Dim
+import warnings
+from .config import Config, Dim, PaddingMode
 
 
 def create_conv(in_channels, out_channels, kernel_size, **kwargs):
@@ -26,12 +27,38 @@ def create_conv(in_channels, out_channels, kernel_size, **kwargs):
         torch.nn.Module: The created convolutional layer.
 
     """
+    if 'padding_mode' in kwargs:
+        message = ('"padding_mode" is ignored when creating conv. '
+                   'Use Config to change it.')
+        warnings.warn(message, RuntimeWarning, stacklevel=2)
+        kwargs.pop('padding_mode')
+
     if Dim(Config.dim) is Dim.TWO:
-        from torch.nn import Conv2d
-        return Conv2d(in_channels, out_channels, kernel_size, **kwargs)
+        from torch.nn import Conv2d as Conv
     elif Dim(Config.dim) is Dim.THREE:
-        from torch.nn import Conv3d
-        return Conv3d(in_channels, out_channels, kernel_size, **kwargs)
+        from torch.nn import Conv3d as Conv
+
+    padding_mode = PaddingMode(Config.padding_mode)
+    if padding_mode in [PaddingMode.REFLECT, PaddingMode.REPLICATE] \
+            and 'padding' in kwargs:
+        if Dim(Config.dim) is Dim.TWO:
+            if padding_mode is PaddingMode.REFLECT:
+                from torch.nn import ReflectionPad2d as Pad
+            elif padding_mode is PaddingMode.REPLICATE:
+                from torch.nn import ReplicationPad2d as Pad
+        elif Dim(Config.dim) is Dim.THREE:
+            if padding_mode is PaddingMode.REFLECT:
+                raise NotImplementedError
+            elif padding_mode is PaddingMode.REPLICATE:
+                from torch.nn import ReplicationPad3d as Pad
+        pad = Pad(kwargs['padding'])
+        conv = Conv(in_channels, out_channels, kernel_size, **kwargs)
+        model = torch.nn.Sequential(pad, conv)
+    else:
+        model = Conv(in_channels, out_channels, kernel_size,
+                     padding_mode=Config.padding_mode, **kwargs)
+
+    return  model
 
 
 def create_k1_conv(in_channels, out_channels, **kwargs):
