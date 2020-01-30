@@ -52,6 +52,7 @@ def create_conv(in_channels, out_channels, kernel_size, **kwargs):
             elif padding_mode is PaddingMode.REPLICATE:
                 from torch.nn import ReplicationPad3d as Pad
         pad = Pad(kwargs['padding'])
+        kwargs.pop('padding')
         conv = Conv(in_channels, out_channels, kernel_size, **kwargs)
         model = torch.nn.Sequential(pad, conv)
     else:

@@ -43,7 +43,7 @@ class RefModel2d(torch.nn.Module):
     def __init__(self):
         super().__init__()
         pad = torch.nn.ReflectionPad2d(1)
-        conv = torch.nn.Conv2d(2, 2, 3, padding=1, stride=2, bias=False)
+        conv = torch.nn.Conv2d(2, 2, 3, stride=2, bias=False)
         self.l1 = torch.nn.Sequential(pad, conv)
         self.l2 = torch.nn.BatchNorm2d(2, track_running_stats=False)
         self.l3 = torch.nn.LeakyReLU(0.02)
