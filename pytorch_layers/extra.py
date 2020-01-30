@@ -16,6 +16,9 @@ def create_dropout():
         torch.nn.Module: The created dropout layer.
 
     """
+    if Config.dropout == 0:
+        from torch.nn import Identity
+        return Identity()
     if Config.dim is Dim.TWO:
         from torch.nn import Dropout2d as Dropout
     elif Config.dim is Dim.THREE:

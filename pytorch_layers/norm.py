@@ -24,6 +24,9 @@ def create_norm(num_features):
     if Config.norm['name'] is NormName.GROUP:
         from torch.nn import GroupNorm
         return GroupNorm(Config.norm.num_groups, num_features, **kwargs)
+    elif Config.norm['name'] is NormName.NONE:
+        from torch.nn import Identity
+        return Identity()
     if Config.dim is Dim.TWO:
         if Config.norm['name'] is NormName.INSTANCE:
             from torch.nn import InstanceNorm2d

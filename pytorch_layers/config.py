@@ -16,6 +16,7 @@ class NormName(str, Enum):
     BATCH = 'batch'
     INSTANCE = 'instance'
     GROUP = 'group'
+    NONE = 'none'
 
 
 class Dim(int, Enum):
