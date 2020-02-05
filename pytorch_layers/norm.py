@@ -26,7 +26,14 @@ def create_norm(num_features):
     elif NormMode(Config.norm_mode) is NormMode.NONE:
         from torch.nn import Identity
         return Identity()
-    if Dim(Config.dim) is Dim.TWO:
+    if Dim(Config.dim) is Dim.ONE:
+        if NormMode(Config.norm_mode) is NormMode.INSTANCE:
+            from torch.nn import InstanceNorm1d
+            return InstanceNorm1d(num_features, **Config.norm_kwargs)
+        elif NormMode(Config.norm_mode) is NormMode.BATCH:
+            from torch.nn import BatchNorm1d
+            return BatchNorm1d(num_features, **Config.norm_kwargs)
+    elif Dim(Config.dim) is Dim.TWO:
         if NormMode(Config.norm_mode) is NormMode.INSTANCE:
             from torch.nn import InstanceNorm2d
             return InstanceNorm2d(num_features, **Config.norm_kwargs)

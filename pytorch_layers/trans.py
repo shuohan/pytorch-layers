@@ -45,7 +45,9 @@ def create_avg_pool(kernel_size, **kwargs):
         torch.nn.Module: The created average pooling layer.
 
     """
-    if Dim(Config.dim) is Dim.TWO:
+    if Dim(Config.dim) is Dim.ONE:
+        from torch.nn import AvgPool1d as AvgPool
+    elif Dim(Config.dim) is Dim.TWO:
         from torch.nn import AvgPool2d as AvgPool
     elif Dim(Config.dim) is Dim.THREE:
         from torch.nn import AvgPool3d as AvgPool
@@ -67,7 +69,9 @@ def create_adaptive_avg_pool(output_size):
         torch.nn.Module: The created adaptive average pooling layer.
     
     """
-    if Dim(Config.dim) is Dim.TWO:
+    if Dim(Config.dim) is Dim.ONE:
+        from torch.nn import AdaptiveAvgPool1d as AdaptiveAvgPool
+    elif Dim(Config.dim) is Dim.TWO:
         from torch.nn import AdaptiveAvgPool2d as AdaptiveAvgPool
     elif Dim(Config.dim) is Dim.THREE:
         from torch.nn import AdaptiveAvgPool3d as AdaptiveAvgPool
@@ -102,7 +106,9 @@ def create_interp(size=None, scale_factor=None):
 
     """
     if InterpMode(Config.interp_mode) is InterpMode.LINEAR:
-        if Dim(Config.dim) is Dim.TWO:
+        if Dim(Config.dim) is Dim.ONE:
+            mode = 'linear'
+        elif Dim(Config.dim) is Dim.TWO:
             mode = 'bilinear'
         elif Dim(Config.dim) is Dim.THREE:
             mode = 'trilinear'

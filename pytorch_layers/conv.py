@@ -33,7 +33,9 @@ def create_conv(in_channels, out_channels, kernel_size, **kwargs):
         warnings.warn(message, RuntimeWarning, stacklevel=2)
         kwargs.pop('padding_mode')
 
-    if Dim(Config.dim) is Dim.TWO:
+    if Dim(Config.dim) is Dim.ONE:
+        from torch.nn import Conv1d as Conv
+    elif Dim(Config.dim) is Dim.TWO:
         from torch.nn import Conv2d as Conv
     elif Dim(Config.dim) is Dim.THREE:
         from torch.nn import Conv3d as Conv
