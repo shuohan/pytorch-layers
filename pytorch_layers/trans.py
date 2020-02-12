@@ -115,6 +115,13 @@ def create_interp(size=None, scale_factor=None):
     elif InterpMode(Config.interp_mode) is InterpMode.NEAREST:
         mode = 'nearest'
         Config.interp_kwargs['align_corners'] = None
+    elif InterpMode(Config.interp_mode) is InterpMode.CUBIC:
+        if Dim(Config.dim) is Dim.ONE:
+            raise NotImplementedError
+        elif Dim(Config.dim) is Dim.TWO:
+            mode = 'bicubic'
+        elif Dim(Config.dim) is Dim.THREE:
+            raise NotImplementedError
     return Interpolate(size=size, scale_factor=scale_factor, mode=mode,
                        align_corners=Config.interp_kwargs.get('align_corners'))
 

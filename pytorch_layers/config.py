@@ -30,6 +30,7 @@ class InterpMode(str, Enum):
     """Enum of the interpolate mode."""
     LINEAR = 'linear'
     NEAREST = 'nearest'
+    CUBIC = 'cubic'
 
 
 class PaddingMode(str, Enum):
