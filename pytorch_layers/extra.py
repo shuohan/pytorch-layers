@@ -21,10 +21,10 @@ def create_dropout():
     if config.dropout == 0:
         from torch.nn import Identity
         return Identity()
-    if Dim(config.dim) is Dim.ONE:
+    if config.dim is Dim.ONE:
         from torch.nn import Dropout
-    elif Dim(config.dim) is Dim.TWO:
+    elif config.dim is Dim.TWO:
         from torch.nn import Dropout2d as Dropout
-    elif Dim(config.dim) is Dim.THREE:
+    elif config.dim is Dim.THREE:
         from torch.nn import Dropout3d as Dropout
     return Dropout(config.dropout)

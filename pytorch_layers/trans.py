@@ -48,11 +48,11 @@ def create_avg_pool(kernel_size, **kwargs):
 
     """
     config = Config()
-    if Dim(config.dim) is Dim.ONE:
+    if config.dim is Dim.ONE:
         from torch.nn import AvgPool1d as AvgPool
-    elif Dim(config.dim) is Dim.TWO:
+    elif config.dim is Dim.TWO:
         from torch.nn import AvgPool2d as AvgPool
-    elif Dim(config.dim) is Dim.THREE:
+    elif config.dim is Dim.THREE:
         from torch.nn import AvgPool3d as AvgPool
     return AvgPool(kernel_size, **config.avg_pool, **kwargs)
 
@@ -73,11 +73,11 @@ def create_adaptive_avg_pool(output_size):
 
     """
     config = Config()
-    if Dim(config.dim) is Dim.ONE:
+    if config.dim is Dim.ONE:
         from torch.nn import AdaptiveAvgPool1d as AdaptiveAvgPool
-    elif Dim(config.dim) is Dim.TWO:
+    elif config.dim is Dim.TWO:
         from torch.nn import AdaptiveAvgPool2d as AdaptiveAvgPool
-    elif Dim(config.dim) is Dim.THREE:
+    elif config.dim is Dim.THREE:
         from torch.nn import AdaptiveAvgPool3d as AdaptiveAvgPool
     return AdaptiveAvgPool(output_size)
 
@@ -111,23 +111,25 @@ def create_interp(size=None, scale_factor=None):
 
     """
     config = Config()
-    if InterpMode(config.interp_mode) is InterpMode.LINEAR:
-        if Dim(config.dim) is Dim.ONE:
+    if config.interp_mode is InterpMode.LINEAR:
+        if config.dim is Dim.ONE:
             mode = 'linear'
-        elif Dim(config.dim) is Dim.TWO:
+        elif config.dim is Dim.TWO:
             mode = 'bilinear'
-        elif Dim(config.dim) is Dim.THREE:
+        elif config.dim is Dim.THREE:
             mode = 'trilinear'
-    elif InterpMode(config.interp_mode) is InterpMode.NEAREST:
+    elif config.interp_mode is InterpMode.NEAREST:
         mode = 'nearest'
         config.interp_kwargs['align_corners'] = None
-    elif InterpMode(config.interp_mode) is InterpMode.CUBIC:
-        if Dim(config.dim) is Dim.ONE:
+    elif config.interp_mode is InterpMode.CUBIC:
+        if config.dim is Dim.ONE:
             raise NotImplementedError
-        elif Dim(config.dim) is Dim.TWO:
+        elif config.dim is Dim.TWO:
             mode = 'bicubic'
-        elif Dim(config.dim) is Dim.THREE:
+        elif config.dim is Dim.THREE:
             raise NotImplementedError
+    elif config.interp_mode is InterpMode.AREA:
+        mode = 'area'
     return Interpolate(size=size, scale_factor=scale_factor, mode=mode,
                        **config.interp_kwargs)
 

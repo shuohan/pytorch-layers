@@ -42,26 +42,8 @@ def create_conv(in_channels, out_channels, kernel_size, **kwargs):
     elif Dim(config.dim) is Dim.THREE:
         from torch.nn import Conv3d as Conv
 
-    padding_mode = PaddingMode(config.padding_mode)
-    if padding_mode in [PaddingMode.REFLECT, PaddingMode.REPLICATE] \
-            and 'padding' in kwargs:
-        if Dim(config.dim) is Dim.TWO:
-            if padding_mode is PaddingMode.REFLECT:
-                from torch.nn import ReflectionPad2d as Pad
-            elif padding_mode is PaddingMode.REPLICATE:
-                from torch.nn import ReplicationPad2d as Pad
-        elif Dim(config.dim) is Dim.THREE:
-            if padding_mode is PaddingMode.REFLECT:
-                raise NotImplementedError
-            elif padding_mode is PaddingMode.REPLICATE:
-                from torch.nn import ReplicationPad3d as Pad
-        pad = Pad(kwargs['padding'])
-        kwargs.pop('padding')
-        conv = Conv(in_channels, out_channels, kernel_size, **kwargs)
-        model = torch.nn.Sequential(pad, conv)
-    else:
-        model = Conv(in_channels, out_channels, kernel_size,
-                     padding_mode=config.padding_mode, **kwargs)
+    model = Conv(in_channels, out_channels, kernel_size,
+                 padding_mode=config.padding_mode, **kwargs)
 
     return  model
 

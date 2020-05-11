@@ -31,6 +31,7 @@ class InterpMode(str, Enum):
     LINEAR = 'linear'
     NEAREST = 'nearest'
     CUBIC = 'cubic'
+    AREA = 'area'
 
 
 class PaddingMode(str, Enum):

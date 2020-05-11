@@ -21,32 +21,32 @@ def create_norm(num_features):
 
     """
     config = Config()
-    if NormMode(config.norm_mode) is NormMode.GROUP:
+    if config.norm_mode is NormMode.GROUP:
         from torch.nn import GroupNorm
-        kwargs = config.norm_kwargs
+        kwargs = config.norm_kwargs.copy()
         num_groups = kwargs.pop('num_groups')
         return GroupNorm(num_groups, num_features, **kwargs)
-    elif NormMode(config.norm_mode) is NormMode.NONE:
+    elif config.norm_mode is NormMode.NONE:
         from torch.nn import Identity
         return Identity()
-    if Dim(config.dim) is Dim.ONE:
-        if NormMode(config.norm_mode) is NormMode.INSTANCE:
+    if config.dim is Dim.ONE:
+        if config.norm_mode is NormMode.INSTANCE:
             from torch.nn import InstanceNorm1d
             return InstanceNorm1d(num_features, **config.norm_kwargs)
-        elif NormMode(config.norm_mode) is NormMode.BATCH:
+        elif config.norm_mode is NormMode.BATCH:
             from torch.nn import BatchNorm1d
             return BatchNorm1d(num_features, **config.norm_kwargs)
-    elif Dim(config.dim) is Dim.TWO:
-        if NormMode(config.norm_mode) is NormMode.INSTANCE:
+    elif config.dim is Dim.TWO:
+        if config.norm_mode is NormMode.INSTANCE:
             from torch.nn import InstanceNorm2d
             return InstanceNorm2d(num_features, **config.norm_kwargs)
-        elif NormMode(config.norm_mode) is NormMode.BATCH:
+        elif config.norm_mode is NormMode.BATCH:
             from torch.nn import BatchNorm2d
             return BatchNorm2d(num_features, **config.norm_kwargs)
-    elif Dim(config.dim) is Dim.THREE:
-        if NormMode(config.norm_mode) is NormMode.INSTANCE:
+    elif config.dim is Dim.THREE:
+        if config.norm_mode is NormMode.INSTANCE:
             from torch.nn import InstanceNorm3d
             return InstanceNorm3d(num_features, **config.norm_kwargs)
-        elif NormMode(config.norm_mode) is NormMode.BATCH:
+        elif config.norm_mode is NormMode.BATCH:
             from torch.nn import BatchNorm3d
             return BatchNorm3d(num_features, **config.norm_kwargs)

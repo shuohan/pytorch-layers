@@ -18,9 +18,9 @@ def create_activ():
 
     """
     config = Config()
-    if ActivMode(config.activ_mode) is ActivMode.RELU:
+    if config.activ_mode is ActivMode.RELU:
         from torch.nn import ReLU
         return ReLU()
-    elif ActivMode(config.activ_mode) is ActivMode.LEAKY_RELU:
+    elif config.activ_mode is ActivMode.LEAKY_RELU:
         from torch.nn import LeakyReLU
         return LeakyReLU(**config.activ_kwargs)
