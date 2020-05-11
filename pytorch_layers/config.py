@@ -54,7 +54,7 @@ class Config(_Config):
         interp_mode (InterpMode): Interpolation mode.
         interp_kwargs (dict): Interpolation parameters.
         padding_mode (PaddingMode): Padding mode.
-        avg_pool (dict): The average pooling kwargs.
+        avg_pool_kwargs (dict): The average pooling kwargs.
 
     """
     def __init__(self):
@@ -68,7 +68,9 @@ class Config(_Config):
         self.add_config('interp_kwargs', dict(), False)
         self.add_config('dropout', 0.2, False)
         self.add_config('padding_mode', PaddingMode.ZEROS, True)
-        self.add_config('avg_pool', dict(), False)
+        self.add_config('avg_pool_kwargs', dict(), False)
+        sep_conv_kwargs = dict(norm_between=False, activ_between=False)
+        self.add_config('sep_conv_kwargs', sep_conv_kwargs, False)
 
     @property
     def dim(self):

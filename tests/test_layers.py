@@ -195,7 +195,7 @@ def test_layers():
     config.interp_mode = 'linear'
     config.dropout = 0.5
     config.padding_mode = 'reflect'
-    config.avg_pool = dict(stride=4)
+    config.avg_pool_kwargs['stride'] =4
 
     str1 = RefModel2d().__str__()
     str2 = Model2().__str__().replace('Model2', 'RefModel2d')
@@ -225,7 +225,7 @@ def test_layers():
     config.interp_mode = InterpMode.LINEAR
     config.dropout = 0
     config.padding_mode = PaddingMode.CIRCULAR
-    config.avg_pool = dict(stride=4)
+    config.avg_pool_kwargs['stride'] = 4
 
     str1 = RefModel2d2().__str__()
     str2 = Model2().__str__().replace('Model2', 'RefModel2d2')
@@ -240,12 +240,11 @@ def test_layers():
     config.interp_mode = InterpMode.AREA
     config.dropout = 0
     config.padding_mode = PaddingMode.REPLICATE
-    config.avg_pool = dict(stride=4)
+    config.avg_pool_kwargs['stride'] = 4
 
     x = torch.rand([1, 2, 8, 8, 8])
     ref = RefModel3d2().eval()
     t = Model2().eval()
-    print(t)
     ref.load_state_dict(t.state_dict())
     y1 = ref(x)
     y2 = t(x)

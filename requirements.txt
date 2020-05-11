@@ -1,2 +1,2 @@
-torch>=1.3.0
-git+https://gitlab.com/shan-utils/config.git
+torch>=1.5.0
+git+https://gitlab.com/shan-utils/singleton-config.git
