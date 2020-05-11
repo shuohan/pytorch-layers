@@ -14,5 +14,5 @@ setup(name='pytorch-layers',
       author='Shuo Han',
       author_email='shan50@jhu.edu',
       scripts=scripts,
-      install_requires=['torch>=1.3.0'],
-      packages=['pytorch-layers'])
+      install_requires=['torch==1.3.0'],
+      packages=['pytorch_layers'])
