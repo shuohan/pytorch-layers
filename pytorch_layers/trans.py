@@ -11,12 +11,13 @@ class Interpolate(Module):
 
     """
     def __init__(self, size=None, scale_factor=None, mode='nearest',
-                 align_corners=None):
+                 align_corners=None, recompute_scale_factor=None):
         super().__init__()
         self.size = size
         self.scale_factor = scale_factor
         self.mode = mode
         self.align_corners = align_corners
+        self.recompute_scale_factor = recompute_scale_factor
 
     def forward(self, input):
         output = interpolate(input, size=self.size,
@@ -31,6 +32,7 @@ class Interpolate(Module):
             info = 'size=' + str(self.size)
         info += ', mode=' + self.mode
         info += ', align_corners=' + str(self.align_corners)
+        info += ', recompute_scale_factor=' + str(self.recompute_scale_factor)
         return info
 
 

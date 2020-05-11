@@ -78,7 +78,7 @@ class Config(_Config):
         if isinstance(d, Dim):
             self._dim = d
         elif isinstance(d, int):
-            self._dim = Dim(d.lower())
+            self._dim = Dim(d)
         else:
             assert False
 
