@@ -11,12 +11,13 @@ class Interpolate(Module):
 
     """
     def __init__(self, size=None, scale_factor=None, mode='nearest',
-                 align_corners=None):
+                 align_corners=None, recompute_scale_factor=None):
         super().__init__()
         self.size = size
         self.scale_factor = scale_factor
         self.mode = mode
         self.align_corners = align_corners
+        self.recompute_scale_factor = recompute_scale_factor
 
     def forward(self, input):
         output = interpolate(input, size=self.size,
@@ -31,6 +32,7 @@ class Interpolate(Module):
             info = 'size=' + str(self.size)
         info += ', mode=' + self.mode
         info += ', align_corners=' + str(self.align_corners)
+        info += ', recompute_scale_factor=' + str(self.recompute_scale_factor)
         return info
 
 
@@ -38,18 +40,21 @@ def create_avg_pool(kernel_size, **kwargs):
     """Creates an pooling layer.
 
     Note:
-        The parameters are configured in :attr:`Config.avg_pool`. These
-        parameters should be mutually exclusive from the input ``kwargs``.
+        The parameters are configured in :attr:`pytorch_layers.Config.avg_pool`.
+        These parameters should be mutually exclusive from the input ``kwargs``.
 
     Returns:
         torch.nn.Module: The created average pooling layer.
 
     """
-    if Config.dim is Dim.TWO:
+    config = Config()
+    if config.dim is Dim.ONE:
+        from torch.nn import AvgPool1d as AvgPool
+    elif config.dim is Dim.TWO:
         from torch.nn import AvgPool2d as AvgPool
-    elif Config.dim is Dim.THREE:
+    elif config.dim is Dim.THREE:
         from torch.nn import AvgPool3d as AvgPool
-    return AvgPool(kernel_size, **Config.avg_pool, **kwargs)
+    return AvgPool(kernel_size, **config.avg_pool, **kwargs)
 
 
 def create_two_avg_pool(**kwargs):
@@ -65,18 +70,21 @@ def create_adaptive_avg_pool(output_size):
 
     Returns:
         torch.nn.Module: The created adaptive average pooling layer.
-    
+
     """
-    if Config.dim is Dim.TWO:
+    config = Config()
+    if config.dim is Dim.ONE:
+        from torch.nn import AdaptiveAvgPool1d as AdaptiveAvgPool
+    elif config.dim is Dim.TWO:
         from torch.nn import AdaptiveAvgPool2d as AdaptiveAvgPool
-    elif Config.dim is Dim.THREE:
+    elif config.dim is Dim.THREE:
         from torch.nn import AdaptiveAvgPool3d as AdaptiveAvgPool
     return AdaptiveAvgPool(output_size)
 
 
 def create_global_avg_pool():
     """Creates global average pooling.
-    
+
     Average the input image. The kernel size is equal to the image size. The
     output has spatial size 1.
 
@@ -95,22 +103,35 @@ def create_interp(size=None, scale_factor=None):
 
     Note:
         The type and other parameters of interpolate are configured in
-        :attr:`Config.interpolate`.
+        :meth:`pytorch_laayers.Config.interp_mode` and
+        :attr:`pytorch_laayers.Config.interp_kwargs`.
 
     Returns:
         torch.nn.Module: The created interpolate layer.
 
     """
-    if Config.interp['mode'] is InterpMode.LINEAR:
-        if Config.dim is Dim.TWO:
+    config = Config()
+    if config.interp_mode is InterpMode.LINEAR:
+        if config.dim is Dim.ONE:
+            mode = 'linear'
+        elif config.dim is Dim.TWO:
             mode = 'bilinear'
-        elif Config.dim is Dim.THREE:
+        elif config.dim is Dim.THREE:
             mode = 'trilinear'
-    elif Config.interp['mode'] is InterpMode.NEAREST:
+    elif config.interp_mode is InterpMode.NEAREST:
         mode = 'nearest'
-        Config.interp['align_corners'] = None
+        config.interp_kwargs['align_corners'] = None
+    elif config.interp_mode is InterpMode.CUBIC:
+        if config.dim is Dim.ONE:
+            raise NotImplementedError
+        elif config.dim is Dim.TWO:
+            mode = 'bicubic'
+        elif config.dim is Dim.THREE:
+            raise NotImplementedError
+    elif config.interp_mode is InterpMode.AREA:
+        mode = 'area'
     return Interpolate(size=size, scale_factor=scale_factor, mode=mode,
-                       align_corners=Config.interp.get('align_corners'))
+                       **config.interp_kwargs)
 
 
 def create_two_upsample():

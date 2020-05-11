@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .config import Config, Dim, ActivName, NormName, InterpMode
+from .config import Config
 from .conv import create_conv, create_k1_conv, create_k3_conv
 from .activ import create_activ
 from .extra import create_dropout

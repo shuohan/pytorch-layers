@@ -2,14 +2,16 @@
 """Functions to create convolutional layers.
 
 """
-from .config import Config, Dim
+import torch
+import warnings
+from .config import Config, Dim, PaddingMode
 
 
 def create_conv(in_channels, out_channels, kernel_size, **kwargs):
     """Creates a convolutional layer.  
     Note:
         This function supports creating a 2D or 3D convolutional layer
-        configured by :attr:`Config.dim`.
+        configured by :meth:`pytorch_layers.Config.dim`.
 
     Note:
         The function passes all keyword arguments directly to the Conv class.
@@ -25,12 +27,25 @@ def create_conv(in_channels, out_channels, kernel_size, **kwargs):
         torch.nn.Module: The created convolutional layer.
 
     """
-    if Config.dim is Dim.TWO:
-        from torch.nn import Conv2d
-        return Conv2d(in_channels, out_channels, kernel_size, **kwargs)
-    elif Config.dim == Dim.THREE:
-        from torch.nn import Conv3d
-        return Conv3d(in_channels, out_channels, kernel_size, **kwargs)
+    if 'padding_mode' in kwargs:
+        message = ('"padding_mode" is ignored when creating conv. '
+                   'Use pytorch_layers.Config to change it.')
+        warnings.warn(message, RuntimeWarning, stacklevel=2)
+        kwargs.pop('padding_mode')
+    
+    config = Config()
+
+    if Dim(config.dim) is Dim.ONE:
+        from torch.nn import Conv1d as Conv
+    elif Dim(config.dim) is Dim.TWO:
+        from torch.nn import Conv2d as Conv
+    elif Dim(config.dim) is Dim.THREE:
+        from torch.nn import Conv3d as Conv
+
+    model = Conv(in_channels, out_channels, kernel_size,
+                 padding_mode=config.padding_mode, **kwargs)
+
+    return  model
 
 
 def create_k1_conv(in_channels, out_channels, **kwargs):
