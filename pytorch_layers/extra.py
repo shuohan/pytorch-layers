@@ -9,20 +9,22 @@ def create_dropout():
     """Creates a spatial dropout layer.
 
     Note:
-        The dropout probability is configured via :attr:`Config.dropout`, and
-        the spatial dimension is configured by :attr:`Config.dim`.
+        The dropout probability is configured via
+        :attr:`pytorch_layers.Config.dropout`, and the spatial dimension is
+        configured by :attr:`pytorch_layers.Config.dim`.
 
     Returns:
         torch.nn.Module: The created dropout layer.
 
     """
-    if Config.dropout == 0:
+    config = Config()
+    if config.dropout == 0:
         from torch.nn import Identity
         return Identity()
-    if Dim(Config.dim) is Dim.ONE:
+    if Dim(config.dim) is Dim.ONE:
         from torch.nn import Dropout
-    elif Dim(Config.dim) is Dim.TWO:
+    elif Dim(config.dim) is Dim.TWO:
         from torch.nn import Dropout2d as Dropout
-    elif Dim(Config.dim) is Dim.THREE:
+    elif Dim(config.dim) is Dim.THREE:
         from torch.nn import Dropout3d as Dropout
-    return Dropout(Config.dropout)
+    return Dropout(config.dropout)

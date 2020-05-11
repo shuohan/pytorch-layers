@@ -150,13 +150,17 @@ class Model1(torch.nn.Module):
 
 def test_layers():
 
+    config = Config()
+
     str1 = RefModel3d().__str__()
     str2 = Model1().__str__().replace('Model1', 'RefModel3d')
     str2 = re.sub('[ \t]+\(l6\).*\n', '', str2)
+    print(str1)
+    print(str2)
     assert str1 == str2
 
-    Config.dim = 1
-    Config.interp_mode = 'linear'
+    config.dim = 1
+    config.interp_mode = 'linear'
     str1 = RefModel1d().__str__()
     str2 = Model1().__str__().replace('Model1', 'RefModel1d')
     print(str2)
@@ -164,15 +168,15 @@ def test_layers():
     assert str1 == str2
     print(str2)
 
-    Config.dim = 2
-    Config.activ_mode = 'leaky_relu'
-    Config.activ_kwargs = dict(negative_slope=0.02)
-    Config.norm_mode = 'batch'
-    Config.norm_kwargs = dict(track_running_stats=False)
-    Config.interp_mode = 'linear'
-    Config.dropout = 0.5
-    Config.padding_mode = 'reflect'
-    Config.avg_pool = dict(stride=4)
+    config.dim = 2
+    config.activ_mode = 'leaky_relu'
+    config.activ_kwargs = dict(negative_slope=0.02)
+    config.norm_mode = 'batch'
+    config.norm_kwargs = dict(track_running_stats=False)
+    config.interp_mode = 'linear'
+    config.dropout = 0.5
+    config.padding_mode = 'reflect'
+    config.avg_pool = dict(stride=4)
 
     str1 = RefModel2d().__str__()
     str2 = Model2().__str__().replace('Model2', 'RefModel2d')
@@ -189,29 +193,29 @@ def test_layers():
     y2 = t(x)
     assert torch.all(torch.eq(y1, y2))
 
-    attrs1 = {k: getattr(Config, k) for k in Config._get_attrs()}
-    Config.save_json('config.json')
-    Config.load_json('config.json')
+    attrs1 = {k: getattr(config, k) for k in config._get_attrs()}
+    config.save_json('config.json')
+    config.load_json('config.json')
     os.remove('config.json')
-    attrs2 = {k: getattr(Config, k) for k in Config._get_attrs()}
+    attrs2 = {k: getattr(config, k) for k in config._get_attrs()}
     assert attrs1 == attrs2
 
-    Config.dim = 2
-    Config.activ_mode = 'leaky_relu'
-    Config.activ_kwargs = dict(negative_slope=0.02)
-    Config.norm_mode = 'none'
-    Config.norm_kwargs = dict(track_running_stats=False)
-    Config.interp_mode = 'linear'
-    Config.dropout = 0
-    Config.padding_mode = 'circular'
-    Config.avg_pool = dict(stride=4)
+    config.dim = 2
+    config.activ_mode = 'leaky_relu'
+    config.activ_kwargs = dict(negative_slope=0.02)
+    config.norm_mode = 'none'
+    config.norm_kwargs = dict(track_running_stats=False)
+    config.interp_mode = 'linear'
+    config.dropout = 0
+    config.padding_mode = 'circular'
+    config.avg_pool = dict(stride=4)
 
     str1 = RefModel2d2().__str__()
     str2 = Model2().__str__().replace('Model2', 'RefModel2d2')
     str2 = re.sub('[ \t]+\(l6\).*\n', '', str2)
     assert str1 == str2
 
-    Config.show()
+    print(config)
 
 
 if __name__ == '__main__':

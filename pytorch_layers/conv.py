@@ -11,7 +11,7 @@ def create_conv(in_channels, out_channels, kernel_size, **kwargs):
     """Creates a convolutional layer.  
     Note:
         This function supports creating a 2D or 3D convolutional layer
-        configured by :attr:`Config.dim`.
+        configured by :meth:`pytorch_layers.Config.dim`.
 
     Note:
         The function passes all keyword arguments directly to the Conv class.
@@ -29,26 +29,28 @@ def create_conv(in_channels, out_channels, kernel_size, **kwargs):
     """
     if 'padding_mode' in kwargs:
         message = ('"padding_mode" is ignored when creating conv. '
-                   'Use Config to change it.')
+                   'Use pytorch_layers.Config to change it.')
         warnings.warn(message, RuntimeWarning, stacklevel=2)
         kwargs.pop('padding_mode')
+    
+    config = Config()
 
-    if Dim(Config.dim) is Dim.ONE:
+    if Dim(config.dim) is Dim.ONE:
         from torch.nn import Conv1d as Conv
-    elif Dim(Config.dim) is Dim.TWO:
+    elif Dim(config.dim) is Dim.TWO:
         from torch.nn import Conv2d as Conv
-    elif Dim(Config.dim) is Dim.THREE:
+    elif Dim(config.dim) is Dim.THREE:
         from torch.nn import Conv3d as Conv
 
-    padding_mode = PaddingMode(Config.padding_mode)
+    padding_mode = PaddingMode(config.padding_mode)
     if padding_mode in [PaddingMode.REFLECT, PaddingMode.REPLICATE] \
             and 'padding' in kwargs:
-        if Dim(Config.dim) is Dim.TWO:
+        if Dim(config.dim) is Dim.TWO:
             if padding_mode is PaddingMode.REFLECT:
                 from torch.nn import ReflectionPad2d as Pad
             elif padding_mode is PaddingMode.REPLICATE:
                 from torch.nn import ReplicationPad2d as Pad
-        elif Dim(Config.dim) is Dim.THREE:
+        elif Dim(config.dim) is Dim.THREE:
             if padding_mode is PaddingMode.REFLECT:
                 raise NotImplementedError
             elif padding_mode is PaddingMode.REPLICATE:
@@ -59,7 +61,7 @@ def create_conv(in_channels, out_channels, kernel_size, **kwargs):
         model = torch.nn.Sequential(pad, conv)
     else:
         model = Conv(in_channels, out_channels, kernel_size,
-                     padding_mode=Config.padding_mode, **kwargs)
+                     padding_mode=config.padding_mode, **kwargs)
 
     return  model
 

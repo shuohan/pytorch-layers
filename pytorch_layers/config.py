@@ -2,7 +2,7 @@
 """Configurations and Enums"""
 
 from enum import Enum
-from config import Config as _Config
+from singleton_config import Config as _Config
 
 
 class ActivMode(str, Enum):
@@ -43,34 +43,93 @@ class PaddingMode(str, Enum):
 
 class Config(_Config):
     """Global configurations for layer creation.
-    
+
+    Attributes:
+        dim (int): Dimensionality of the operations.
+        activ_mode (ActivMode): Activation mode.
+        activ_kwargs (dict): Activation parameters.
+        norm_mode (NormMode): Normalization mode.
+        norm_kwargs (dict): Normalization parameters.
+        interp_mode (InterpMode): Interpolation mode.
+        interp_kwargs (dict): Interpolation parameters.
+        padding_mode (PaddingMode): Padding mode.
+        avg_pool (dict): The average pooling kwargs.
+
     """
-    dim = 3
-    """int: Dimensionality of the operations."""
+    def __init__(self):
+        super().__init__()
+        self.add_config('dim', Dim.THREE, True)
+        self.add_config('activ_mode', ActivMode.RELU, True)
+        self.add_config('activ_kwargs', dict(), False)
+        self.add_config('norm_mode', NormMode.INSTANCE, True)
+        self.add_config('norm_kwargs', dict(affine=True), False)
+        self.add_config('interp_mode', InterpMode.NEAREST, True)
+        self.add_config('interp_kwargs', dict(), False)
+        self.add_config('dropout', 0.2, False)
+        self.add_config('padding_mode', PaddingMode.ZEROS, True)
+        self.add_config('avg_pool', dict(), False)
 
-    activ_mode = 'relu'
-    """str: Activation name."""
+    @property
+    def dim(self):
+        return self._dim
 
-    activ_kwargs = dict()
-    """dict: Activation settings."""
+    @dim.setter
+    def dim(self, d):
+        if isinstance(d, Dim):
+            self._dim = d
+        elif isinstance(d, int):
+            self._dim = Dim(d.lower())
+        else:
+            assert False
 
-    norm_mode = 'instance'
-    """str: Normalization name."""
+    @property
+    def activ_mode(self):
+        return self._activ_mode
 
-    norm_kwargs = dict(affine=True)
-    """dict: Normalization settings."""
+    @activ_mode.setter
+    def activ_mode(self, m):
+        if isinstance(m, ActivMode):
+            self._activ_mode = m
+        elif isinstance(m, str):
+            self._activ_mode = ActivMode(m.lower())
+        else:
+            assert False
 
-    interp_mode = 'nearest'
-    """str: Interpolation mode."""
+    @property
+    def norm_mode(self):
+        return self._norm_mode
 
-    interp_kwargs = dict()
-    """str: Interpolation settings."""
+    @norm_mode.setter
+    def norm_mode(self, m):
+        if isinstance(m, NormMode):
+            self._norm_mode = m
+        elif isinstance(m, str):
+            self._norm_mode = NormMode(m.lower())
+        else:
+            assert False
 
-    dropout = 0.2
-    """float: Dropout rate."""
+    @property
+    def interp_mode(self):
+        return self._interp_mode
 
-    avg_pool = dict()
-    """dict: Average pooling settings."""
+    @interp_mode.setter
+    def interp_mode(self, m):
+        if isinstance(m, InterpMode):
+            self._interp_mode = m
+        elif isinstance(m, str):
+            self._interp_mode = InterpMode(m.lower())
+        else:
+            assert False
 
-    padding_mode = 'zeros'
-    """str: Padding mode."""
+    @property
+    def padding_mode(self):
+        return self._padding_mode
+
+    @padding_mode.setter
+    def padding_mode(self, m):
+        if isinstance(m, PaddingMode):
+            self._padding_mode = m
+        elif isinstance(m, str):
+            self._padding_mode = PaddingMode(m.lower())
+        else:
+            assert False

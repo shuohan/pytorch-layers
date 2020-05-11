@@ -38,20 +38,21 @@ def create_avg_pool(kernel_size, **kwargs):
     """Creates an pooling layer.
 
     Note:
-        The parameters are configured in :attr:`Config.avg_pool`. These
-        parameters should be mutually exclusive from the input ``kwargs``.
+        The parameters are configured in :attr:`pytorch_layers.Config.avg_pool`.
+        These parameters should be mutually exclusive from the input ``kwargs``.
 
     Returns:
         torch.nn.Module: The created average pooling layer.
 
     """
-    if Dim(Config.dim) is Dim.ONE:
+    config = Config()
+    if Dim(config.dim) is Dim.ONE:
         from torch.nn import AvgPool1d as AvgPool
-    elif Dim(Config.dim) is Dim.TWO:
+    elif Dim(config.dim) is Dim.TWO:
         from torch.nn import AvgPool2d as AvgPool
-    elif Dim(Config.dim) is Dim.THREE:
+    elif Dim(config.dim) is Dim.THREE:
         from torch.nn import AvgPool3d as AvgPool
-    return AvgPool(kernel_size, **Config.avg_pool, **kwargs)
+    return AvgPool(kernel_size, **config.avg_pool, **kwargs)
 
 
 def create_two_avg_pool(**kwargs):
@@ -67,20 +68,21 @@ def create_adaptive_avg_pool(output_size):
 
     Returns:
         torch.nn.Module: The created adaptive average pooling layer.
-    
+
     """
-    if Dim(Config.dim) is Dim.ONE:
+    config = Config()
+    if Dim(config.dim) is Dim.ONE:
         from torch.nn import AdaptiveAvgPool1d as AdaptiveAvgPool
-    elif Dim(Config.dim) is Dim.TWO:
+    elif Dim(config.dim) is Dim.TWO:
         from torch.nn import AdaptiveAvgPool2d as AdaptiveAvgPool
-    elif Dim(Config.dim) is Dim.THREE:
+    elif Dim(config.dim) is Dim.THREE:
         from torch.nn import AdaptiveAvgPool3d as AdaptiveAvgPool
     return AdaptiveAvgPool(output_size)
 
 
 def create_global_avg_pool():
     """Creates global average pooling.
-    
+
     Average the input image. The kernel size is equal to the image size. The
     output has spatial size 1.
 
@@ -99,31 +101,33 @@ def create_interp(size=None, scale_factor=None):
 
     Note:
         The type and other parameters of interpolate are configured in
-        :attr:`Config.interpolate`.
+        :meth:`pytorch_laayers.Config.interp_mode` and
+        :attr:`pytorch_laayers.Config.interp_kwargs`.
 
     Returns:
         torch.nn.Module: The created interpolate layer.
 
     """
-    if InterpMode(Config.interp_mode) is InterpMode.LINEAR:
-        if Dim(Config.dim) is Dim.ONE:
+    config = Config()
+    if InterpMode(config.interp_mode) is InterpMode.LINEAR:
+        if Dim(config.dim) is Dim.ONE:
             mode = 'linear'
-        elif Dim(Config.dim) is Dim.TWO:
+        elif Dim(config.dim) is Dim.TWO:
             mode = 'bilinear'
-        elif Dim(Config.dim) is Dim.THREE:
+        elif Dim(config.dim) is Dim.THREE:
             mode = 'trilinear'
-    elif InterpMode(Config.interp_mode) is InterpMode.NEAREST:
+    elif InterpMode(config.interp_mode) is InterpMode.NEAREST:
         mode = 'nearest'
-        Config.interp_kwargs['align_corners'] = None
-    elif InterpMode(Config.interp_mode) is InterpMode.CUBIC:
-        if Dim(Config.dim) is Dim.ONE:
+        config.interp_kwargs['align_corners'] = None
+    elif InterpMode(config.interp_mode) is InterpMode.CUBIC:
+        if Dim(config.dim) is Dim.ONE:
             raise NotImplementedError
-        elif Dim(Config.dim) is Dim.TWO:
+        elif Dim(config.dim) is Dim.TWO:
             mode = 'bicubic'
-        elif Dim(Config.dim) is Dim.THREE:
+        elif Dim(config.dim) is Dim.THREE:
             raise NotImplementedError
     return Interpolate(size=size, scale_factor=scale_factor, mode=mode,
-                       align_corners=Config.interp_kwargs.get('align_corners'))
+                       **config.interp_kwargs)
 
 
 def create_two_upsample():
