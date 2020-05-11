@@ -40,8 +40,9 @@ def create_avg_pool(kernel_size, **kwargs):
     """Creates an pooling layer.
 
     Note:
-        The parameters are configured in :attr:`pytorch_layers.Config.avg_pool`.
-        These parameters should be mutually exclusive from the input ``kwargs``.
+        The parameters are configured in
+        :attr:`pytorch_layers.Config.avg_pool_kwargs`. These parameters should
+        be mutually exclusive from the input ``kwargs``.
 
     Returns:
         torch.nn.Module: The created average pooling layer.
@@ -54,7 +55,7 @@ def create_avg_pool(kernel_size, **kwargs):
         from torch.nn import AvgPool2d as AvgPool
     elif config.dim is Dim.THREE:
         from torch.nn import AvgPool3d as AvgPool
-    return AvgPool(kernel_size, **config.avg_pool, **kwargs)
+    return AvgPool(kernel_size, **config.avg_pool_kwargs, **kwargs)
 
 
 def create_two_avg_pool(**kwargs):

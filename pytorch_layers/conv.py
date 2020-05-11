@@ -35,11 +35,11 @@ def create_conv(in_channels, out_channels, kernel_size, **kwargs):
     
     config = Config()
 
-    if Dim(config.dim) is Dim.ONE:
+    if config.dim is Dim.ONE:
         from torch.nn import Conv1d as Conv
-    elif Dim(config.dim) is Dim.TWO:
+    elif config.dim is Dim.TWO:
         from torch.nn import Conv2d as Conv
-    elif Dim(config.dim) is Dim.THREE:
+    elif config.dim is Dim.THREE:
         from torch.nn import Conv3d as Conv
 
     model = Conv(in_channels, out_channels, kernel_size,
